@@ -1,46 +1,61 @@
-Website Performance Dashboard
+# Website Performance Dashboard
 
-Introduction
-In today's digital age, understanding website performance is crucial for optimizing user experience and increasing conversion rates. This project analyzes key metrics — page views, session duration, bounce rate, and conversion rate — to uncover insights into user behavior and website efficiency. An interactive Power BI dashboard was built to visualize these metrics and support data-driven decisions.
+A Power BI dashboard that shows how visitors use a website: page views, session time, bounce rate and conversion rate.
 
-Data Description
-The dataset, website_performance_analytics.csv, contains the following variables:
-Visitor_ID — Unique identifier for each visitor
-Page_Views — Number of pages viewed by the visitor during a session
-Session_Duration — Duration of the session in seconds
-Bounce_Rate — Percentage of visitors who leave the site after viewing only one page
-Conversion_Rate — Percentage of visitors who complete a desired action (e.g., purchase, sign-up)
-Traffic_Source — Source from which the visitor arrived at the website (e.g., Direct, Organic Search, Paid Search)
-Exit_Pages — Pages from which visitors exit the site
-Load_Time — Time taken to load the webpage
-Visitor_Type — Type of visitor (New or Returning)
-Location — Geographic location of the visitor
-Workflow
+## Overview
+Understanding website performance helps a business improve user experience and increase conversions. This project analyses visitor data and presents the main metrics in one interactive dashboard, so a non-technical user can explore the results and filter by exit page.
 
-1. Data Preparation
-Loaded website_performance_analytics.csv into Power BI
-Converted Bounce_Rate and Conversion_Rate into percentage format with zero decimal points
-Assigned the data category "City" to the Location variable
+## Dataset
+File: `website_performance_analytics.csv` (5,870 visitors)
+Source: Practice dataset from the Udemy course "72 Days of Data Analyst Bootcamp".
 
-2. Dashboard Creation
-Set the dashboard title to "Website Performance Dashboard"
-Used Exit_Page as the key filter within the title bar
-Built KPI cards for average Page_Views, Session_Duration, Bounce_Rate, and Conversion_Rate
-Created the following visuals:
-Two donut charts showing average Bounce_Rate and Conversion_Rate by Visitor_Type
-A bar chart showing average Conversion_Rate by Traffic_Source
-A map chart showing average Conversion_Rate by Location
-A table of the top 100 visitors by average Conversion_Rate, with Visitor_ID, Page_Views, Session_Duration, and Conversion_Rate (sorted descending by Conversion_Rate, with cell-based data bars on all columns except Visitor_ID)
+| Column | Meaning |
+|---|---|
+| Visitor_ID | Unique ID for each visitor |
+| Page_Views | Pages viewed in the session |
+| Session_Duration | Length of the session in seconds |
+| Bounce_Rate | Bounce value for the visitor (a bounce means leaving after viewing one page) |
+| Conversion_Rate | Conversion value for the visitor (a conversion is a desired action, such as a purchase or sign-up) |
+| Traffic_Source | Where the visitor came from: Direct, Organic, Social Media or Referral |
+| Exit_Pages | The page the visitor left from |
+| Load_Time | Page load time |
+| Visitor_Type | New or Returning |
+| City | City of the visitor (used for the map) |
 
-Dashboard
-<img width="811" height="463" alt="image" src="https://github.com/user-attachments/assets/c859e2d5-ed06-4efb-909d-fb3836260d97" />
+## Dashboard
+<img width="910" height="520" alt="website-performance-dashboard" src="https://github.com/user-attachments/assets/730561b2-3feb-47d3-b595-3191496e28b9" />
 
+## What I Built
+- **Data preparation:** loaded the CSV into Power BI, formatted Bounce_Rate and Conversion_Rate as percentages, and set the data category of City so the map works.
+- **Page buttons:** Blog, Checkout, Contact Us, Homepage and Product Page buttons filter the whole dashboard by exit page.
+- **KPI cards:** average page views, average session duration, average bounce rate, average conversion rate, total visitors and high converter %.
+- **Charts:** two donut charts (bounce rate and conversion rate by visitor type), a bar chart (conversion rate by traffic source) and a map (conversion rate by city).
+- **Table:** top 100 visitors by conversion rate, with data bars on the numeric columns.
 
-Key Findings
-Bounce Rate and Conversion Rate are nearly identical between New and Returning visitors (~50% and ~5% respectively)
-All traffic sources — Direct, Organic, Social Media, Referral — convert at a similar ~5% rate
-The top 100 visitors by conversion rate all cluster around a 10% conversion rate, regardless of session duration or page views
+## DAX Measures
+```
+Avg Page Views = AVERAGE('website data'[Page_Views])
+Total Visitors = DISTINCTCOUNT('website data'[Visitor_ID])
+High Converters = CALCULATE(COUNTROWS('website data'), 'website data'[Conversion_Rate] >= 0.1)
+High Converter % = DIVIDE([High Converters], COUNTROWS('website data'))
+```
+- `AVERAGE` gives the average page views for the visitors currently selected.
+- `DISTINCTCOUNT` counts each visitor once.
+- `CALCULATE` with `COUNTROWS` counts only the visitors with a conversion rate of 10% or more.
+- `DIVIDE` calculates the percentage safely, without errors when the total is zero.
 
-Conclusion
-This dashboard provides a clear, at-a-glance overview of website performance metrics. It helps identify trends across visitor types, traffic sources, and locations, and supports data-driven decisions to optimize the user experience and improve conversion rates going forward.
+## Key Findings
+- Bounce rate and conversion rate are almost the same for New and Returning visitors (about 50% and 5%).
+- All traffic sources (Direct, Organic, Social Media, Referral) convert at a similar rate of about 5%.
+- The top 100 visitors by conversion rate all cluster around 10%, whatever their session duration or page views.
+- 276 of 5,870 visitors (about 4.7%) reach the 10% conversion level.
+
+## Limitations and Next Steps
+- The data is one flat table with no date field, so I could not analyse trends over time.
+- Visitor type, traffic source and city show very similar results, so they do not explain differences in conversion.
+- Next: analyse exit pages and load time against bounce rate, add a date field, and test whether any differences are statistically significant.
+
+## Tools Used
+Power BI Desktop, DAX
+
 
